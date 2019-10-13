@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="layout/layout :: head"></head>
+<body>
+
+<header th:replace="layout/layout :: header"></header>
+
+<div class="container">
+	
+	<div class="card bg-light">
+		<div class="card-header" th:text=${titulo}>
+		</div>
+		<div class="card-body">
+			<h5 class="card-title">
+				<a class="btn btn-warning" th:href="@{/factura/form/} + ${cliente.id}" th:text="'Crear Factura'" sec:authorize="hasRole('ROLE_ADMIN')"></a>
+			</h5>
+			<div class="container">
+				<div class="row">
+					<div class="col-3" th:if="${#strings.length(cliente.foto)>0}">
+						<img th:src="@{'/uploads/' + ${cliente.foto}}" th:alt="${cliente.nombre}" class="img-fluid rounded">
+					</div>
+					<div class="col-9">
+						<ul class="list-group">
+							<li class="list-group-item" th:text="${cliente.nombre}"></li>
+							<li class="list-group-item" th:text="${cliente.apellido}"></li>
+							<li class="list-group-item" th:text="${cliente.email}"></li>
+							<li class="list-group-item" th:text="${cliente.createAt}"></li>
+						</ul>
+					</div>
+				</div>
+	
+				<div class="row">
+					<div th:if="${#lists.isEmpty(cliente.facturas)}" class="col-12 alert alert-info" th:text="'No existen facturas asignadas para el cliente ' + ${cliente.nombre} + ' ' + ${cliente.apellido}"></div>
+				</div>
+
+				<div th:if="${!#lists.isEmpty(cliente.facturas)}" class="row mt-5">
+					<div class="col-12">
+						<table class="table table-striped">
+							<thead class="thead-dark">
+								<tr>
+									<th>Folio</th>
+									<th>Descripcion</th>									
+									<th>Fecha</th>
+									<th>Total</th>
+									<th>Opciones</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="factura: ${cliente.facturas}">
+									<td th:text="${factura.id}"></td>
+									<td th:text="${factura.descripcion}"></td>
+									<td th:text="${factura.createAt}"></td>
+									<td th:text="${factura.total}"></td>
+									<td>
+										<div class="dropdown">
+											<i class="fas fa-user-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+											<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+												<a class="dropdown-item alert alert-secondary" th:text="${factura.descripcion}"></a>
+
+    											<div class="dropdown-divider"></div>
+
+												<a class="dropdown-item" th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'Ver Factura'" sec:authorize="hasRole('ROLE_ADMIN')"></a>
+
+												<a class="dropdown-item" th:href="@{'/factura/eliminar/' + ${factura.id}}" th:text="'Eliminar Factura'" onclick="return confirm('Seguro que deseas eliminar la factura?');" sec:authorize="hasRole('ROLE_ADMIN')"></a>
+
+									    	</div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>			
+		</div>
+	</div>
+</div>
+
+<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

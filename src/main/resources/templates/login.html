@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<title>Acceso</title>
+<body>
+
+<!-- <header th:replace="layout/layout :: header"></header> -->
+
+<div class="container">
+	<div class="card border-primary text-center">
+		<div class="card-header">Sing In</div>
+		<div class="card-body">
+			<form th:action="@{/login}" method="post">
+				<div class="form-group">
+					<input type="text" class="form-control" id="username" name="username" autofocus placeholder="Usuario" required="required">
+					<input type="password" class="form-control" id="password" name="password" placeholder="Contraseña" required="required">
+					<input type="submit" class="btn btn-lg btn-primary btn-block" value="Entrar">	
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<footer th:replace="layout/layout :: footer"></footer>
+
+</body>
+</html>
