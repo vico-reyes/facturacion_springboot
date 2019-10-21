@@ -6,26 +6,26 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import com.bolsadeideas.springboot.app.auth.handler.LoginSuccessHandler;
+import com.bolsadeideas.springboot.app.models.service.JpaUserDetailsService;
 
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	private LoginSuccessHandler successHandler;
 	
 	@Autowired
-	private LoginSuccessHandler successHandler;
+	private JpaUserDetailsService userDetailsService;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/","/css/**","/js/**", "/images/**","/listar").permitAll()
+		http.authorizeRequests().antMatchers("/","/css/**","/js/**", "/images/**","/listar","/locale").permitAll()
 		/*.antMatchers("/ver/**").hasAnyRole("USER")
 		.antMatchers("/uploads/**").hasAnyAuthority("USER")*/
 		/*.antMatchers("/form/**").hasAnyRole("ADMIN")*/
@@ -44,12 +44,20 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	public void configurerGlobal(AuthenticationManagerBuilder builder) throws Exception{
-		PasswordEncoder encoder = this.passwordEncoder;
+		
+		builder.userDetailsService(userDetailsService)
+			.passwordEncoder(passwordEncoder)
+			
+			;		
+		
+		/*PasswordEncoder encoder = this.passwordEncoder;
 		UserBuilder users = User.builder().passwordEncoder(encoder::encode);
 		
 		builder.inMemoryAuthentication()
 		.withUser(users.username("admin").password("12345").roles("ADMIN","USER"))
-		.withUser(users.username("sir.rotvico").password("0224").roles("USER"));
+		.withUser(users.username("sir.rotvico").password("0224").roles("USER"));*/
+		
+		
 		
 	}
 	
