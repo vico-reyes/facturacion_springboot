@@ -10,7 +10,8 @@
 			<div class="card-header" th:text="${titulo}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a @href="@{'/ver/' + ${factura.cliente.id}}" class="btn btn-light">&laquo; Volver</a>
+					<a th:href="@{'/ver/' + ${factura.cliente.id}}" class="btn btn-light">&laquo; Volver</a>
+					<a th:href="@{'/factura/ver/' + ${factura.id}(format=pdf)}" class="btn btn-danger float-right">Generar Pdf</a>
 				</h4>
 				<ul class="list-group">
 					<li class="list-group-item list-group-item-primary" th:text="'Datos del cliente'"></li>
